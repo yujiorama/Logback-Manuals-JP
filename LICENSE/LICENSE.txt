@@ -1,0 +1,7 @@
+Logback Manuals Japanese: the reliable, generic, fast and flexible logging framework.
+Copyright (C) 2014, Logback-JP-Group. All rights reserved. 
+
+This program and the accompanying material is the terms of 
+the Eclipse Public License v1.0 as published by the Eclipse Foundation
+
+    https://www.eclipse.org/legal/epl-v10.html
