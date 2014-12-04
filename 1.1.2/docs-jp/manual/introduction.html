@@ -48,10 +48,10 @@
 
     <p>Logbackは有名な<a href="reasonsToSwitch.html">log4jの後を受けて</a>作られた後継プロジェクトの１つです。
     それは、10年の非常に強力なロギングシステムの設計で培われた経験の上に成り立っています。
-    そこから得られた成果物であるlogbackは既存の全てのロギングシステムよりも高速で小さな足あとを持っています。
-    機能によっては大きな差が出ているくらいです。
+    そこから得られた成果物であるlogbackは既存の全てのロギングシステムよりも高速です。
+    機能によっては大きな差が出ています。
     特徴的な点では、logbackのみに存在する<a
-    href="../reasonsToSwitch.html">ユニークな機能や、他のロッキングシステムには無い便利な機能</a>も提供しています。
+    href="../reasonsToSwitch.html">ユニークな機能や、他のロギングシステムには無い便利な機能</a>も提供しています。
     </p>
 
     <h2>最初のステップ</h2>
@@ -61,7 +61,7 @@
     <a name="Requirements"></a>
     <h3>最低限必要なもの</h3>
 
-    <p>Logback-classiモジュールを利用するためには<em>logback-classic.jar</em>だけでなく
+    <p>Logback-classicモジュールを利用するためには<em>logback-classic.jar</em>だけでなく
     <em>slf4j-api.jar</em>と<em>logback-core.jar</em>をクラスパスに追加する必要があります。
     </p>
 
@@ -93,29 +93,22 @@ public class HelloWorld1 {
     href="http://slf4j.org/api/org/slf4j/Logger.html"><code>Logger</code></a
     >と、<a
     href="http://slf4j.org/api/org/slf4j/LoggerFactory.html"><code>LoggerFactory</code></a
-    >をクラスインポートすることで、logbackを使用可能な状態にします。。
+    >クラスをインポートすることで、logbackを使用可能な状態にします。
     </p>
 
+    <p>main()メソッドの最初の行では、<code>LoggerFactory</code>クラスの<code
+    >getLogger</code>スタティックメソッドを利用して
+    <code>logger</code>変数に<code>Logger</code>インスタンスが代入されています。
+    このloggerは"chapters.introduction.HelloWorld1"と名付けられました。
+    mainメソッドが第一引数"Hello World"文字列を持つこのloggerインスタンスの<code>debug</code>メソッドを実行します。
+    私達はmainメソッドの内容DBUGレベルの"Hello world"を持つloggingステートメントと言います。</p>
 
-    <p>On the first line of the main() method, the variable named
-    <code>logger</code> is assigned a <code>Logger</code> instance
-    retrieved by invoking the static <code>getLogger</code> method
-    from the <code>LoggerFactory</code> class.  This logger is named
-    "chapters.introduction.HelloWorld1". The main method proceeds to call the
-    <code>debug</code> method of this logger passing "Hello World" as
-    an argument.  We say that the main method contains a logging
-    statement of level DEBUG with the message "Hello world".
-    </p>
-
-    <p>Note that the above example does not reference any logback
-    classes. In most cases, as far as logging is concerned, your
-    classes will only need to import SLF4J classes. Thus, the vast
-    majority, if not all, of your classes will use the SLF4J
-    API and will be oblivious to the existence of logback.
-    </p>
+    <p>上記はlogbackクラス使用方法のほんの１例です。
+    ほぼ全てのケースで、ロギングを使う唯一のルールは、あなたのクラスにSLF4Jクラスをインポートすることだけです。
+    このように、大多数が、logbackの存在に気付れないままSLF4J APIを使用しています。</p>
 
 
-    <p>You can launch the first
+    <p>最初の起動You can launch the first
     sample application, <em>chapters.introduction.HelloWorld1</em> with the command:
     </p>
     <div class="source"><pre>java chapters.introduction.HelloWorld1</pre></div>
