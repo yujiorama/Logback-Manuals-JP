@@ -65,8 +65,8 @@
     <em>slf4j-api.jar</em>と<em>logback-core.jar</em>をクラスパスに追加する必要があります。
     </p>
 
-    <p><em>logback-*.jar</em>ファイルはlogbackのディストリビューションの一つですが、
-    その一方で<em>slf4j-api-1.7.6.jar</em>はSLF4に則った分割プロジェクトです。
+    <p><em>logback-*.jar</em>ファイルはlogbackのディストリビューションの一つです。
+    <em>slf4j-api-1.7.6.jar</em>はSLF4のプロジェクトの１つです。
     </p>
 
     <p>早速logbackを試してみましょう。</p>
@@ -101,37 +101,29 @@ public class HelloWorld1 {
     <code>logger</code>変数に<code>Logger</code>インスタンスが代入されています。
     このloggerは"chapters.introduction.HelloWorld1"と名付けられました。
     mainメソッドが第一引数"Hello World"文字列を持つこのloggerインスタンスの<code>debug</code>メソッドを実行します。
-    私達はmainメソッドの内容DBUGレベルの"Hello world"を持つloggingステートメントと言います。</p>
+    一般にmainメソッドの内容DBUGレベルの"Hello world"を持つloggingステートメントと言います。</p>
 
     <p>上記はlogbackクラス使用方法のほんの１例です。
     ほぼ全てのケースで、ロギングを使う唯一のルールは、あなたのクラスにSLF4Jクラスをインポートすることだけです。
     このように、大多数が、logbackの存在に気付れないままSLF4J APIを使用しています。</p>
 
 
-    <p>最初の起動You can launch the first
-    sample application, <em>chapters.introduction.HelloWorld1</em> with the command:
-    </p>
+    <p>上記のサンプルはコマンドに<em>chapters.introduction.HelloWorld1</em>を指定することで実行できます。<br>
+    コマンド例：</p>
     <div class="source"><pre>java chapters.introduction.HelloWorld1</pre></div>
 
-    <p>Launching the <code>HelloWorld1</code> application will output
-    a single line on the console. By virtue of logback's default
-    configuration policy, when no default configuration file is found,
-    logback will add a <code>ConsoleAppender</code> to the root
-    logger.
+    <p><code>HelloWorld1</code>アプリケーション起動中、コンソール上に１行出力されます。
+    デフォルト設定ファイルを見つけ出せなかった時に、logbackはロガーのrootに<code>ConsoleAppender</code>を追加したデフォルト設定ポリシーを代わりに設定します。
     </p>
 
     <p class="source">20:49:07.962 [main] DEBUG chapters.introduction.HelloWorld1 - Hello world.</p>
 
-    <p>Logback can report information about its internal state using a
-    built-in status system. Important events occurring during logback's
-    lifetime can be accessed through a component called
-    <code>StatusManager</code>. For the time being, let us instruct
-    logback to print its internal state by invoking the static
-    <code>print()</code> method of the <code>StatusPrinter</code>
-    class.
+    <p>Logbackは内包しているステータスシステムを利用して、内部ステータスについての情報を報告することができます。
+    logbackの有効期間中に発生した重要なイベントは、<code>StatusManager</code>と呼ばれるコンポーネントを介してアクセスすることができます
+    続いて、<code>StatusPrinter</code>クラスの静的<code>print()</code>メソッドを呼び出すことで、Loggerの内部状態を表示するlogbackに指示してみましょう。
     </p>
 
-<em>Example: Printing Logger Status (<a href="../xref/chapters/introduction/HelloWorld2.html">logback-examples/src/main/java/chapters/introduction/HelloWorld2.java</a>)</em>
+<em>Example: Logger 内部状態 (<a href="../xref/chapters/introduction/HelloWorld2.html">logback-examples/src/main/java/chapters/introduction/HelloWorld2.java</a>)</em>
 <pre class="brush:java collapse:true highlight:[5,6,15,16]" title="Loggerステータスを表示する例">package chapters.introduction;
 
 import org.slf4j.Logger;
@@ -152,8 +144,7 @@ public class HelloWorld2 {
 }</pre>
 
 
-   <p>Running the <code>HelloWorld2</code> application will produce
-   the following output:</p>
+   <p><code>HelloWorld2</code>実行時、次のように出力されます：</p>
 
 <div class="source longline"><pre>12:49:22.203 [main] DEBUG chapters.introduction.HelloWorld2 - Hello world.
 12:49:22,076 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.groovy]
@@ -163,19 +154,15 @@ public class HelloWorld2 {
 </pre></div>
 
 
-  <p>Logback explains that having failed to find the
-  <em>logback-test.xml</em> and <em>logback.xml</em> configuration
-  files (discussed later), it configured itself using its default
-  policy, which is a basic <code>ConsoleAppender</code>.  An
-  <code>Appender</code> is a class that can be seen as an output
-  destination. Appenders exist for many different destinations
-  including the console, files, Syslog, TCP Sockets, JMS and many
-  more. Users can also easily create their own Appenders as
-  appropriate for their specific situation.
+  <p>Logbackは<em>logback-test.xml</em>や<em>logback.xml</em>等の設定ファイル（設定ファイルの説明は後記）を見つけられなかったことを説明します。
+  デフォルトでは、基本<code>ConsoleAppender</code>を設定します。
+  <code>Appender</code>は出力先を設定することができるクラスです。
+  コンソール、ファイル、syslog、TCP sockets、JMSなども含め、
+  たくさんの異なる出力先をもつAppenderが存在します。
+  使用者は、特化したシチュエーションに適切な、自身のAppenderクラスも簡単に作成することができます。
   </p>
 
-  <p>Note that in case of errors, logback will automatically print its
-  internal state on the console.</p>
+  <p>logbackがコンソール上に内部ステータスを自動出力するエラーケースに注意してください。</p>
 
   <p>The previous examples are rather simple. Actual logging in a
   larger application would not be that different. The general pattern
