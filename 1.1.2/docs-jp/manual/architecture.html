@@ -3,12 +3,14 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-    <title>Chapter 2: Architecture</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>2: アーキテクチャ</title>
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../css/screen.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../css/_print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="../css/prettify.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/SyntaxHighlighter/shCore.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/SyntaxHighlighter/shThemeRDark.css" media="screen" />
   </head>
   <body onload="prettyPrint(); decorate();">
     <script type="text/javascript">prefix='../';</script>
@@ -25,7 +27,7 @@
     </div>
     <div id="content">
 
-   <h1>Chapter 2: Architecture</h1>
+   <h1>2: アーキテクチャ</h1>
 
    <div class="quote">
       <p><em>All true classification is genealogical.</em></p>
@@ -43,48 +45,48 @@
 
    <script src="../templates/creative.js" type="text/javascript"></script>
 
-    <h2>Logback's architecture</h2>
+    <h2>Logbackアーキテクチャ</h2>
 
-    <p>Logback's basic architecture is sufficiently generic so as to
-    apply under different circumstances. At the present time, logback
-    is divided into three modules, logback-core, logback-classic and
-    logback-access.
+    <p>Logbackの基本アーキテクチャはいかなる状況下に於いても汎用的に利用できるよう作られています。
+    今ではlogbackは、logback-core, logback-classicとlogback-accessの３モジュールに分かれています。
     </p>
 
-    <p>The <em>core</em> module lays the groundwork for the other two
-    modules.  The <em>classic</em> module extends <em>core</em>. The
-    classic module corresponds to a significantly improved version of
-    log4j. Logback-classic natively implements the <a
-    href="http://www.slf4j.org">SLF4J API</a> so that you can readily
-    switch back and forth between logback and other logging systems
-    such as log4j or java.util.logging (JUL) introduced in JDK
-    1.4. The third module called <em>access</em> integrates with
-    Servlet containers to provide HTTP-access log functionality. A
-    separate document covers <a href="../access.html">access module
-    documentation</a>.
+    <p><em>core</em>モジュールは他の２モジュールのための土台となっています。
+    <em>classic</em>モジュールは、<em>core</em>モジュールを継承し作られています。
+    <em>classic</em>モジュールは、大幅に改善されたバージョンのlog4jにも対応しています。
+    Logback-classicネイティブに<a
+    href="http://www.slf4j.org">SLF4J API</a>を実装しています。
+    SLF4J APIはJDK1.4で導入された"java.util.logging (JUL)"や"log4j"他のロギングシステムとlogbackを相互に切り替えることができます。
+    <em>access</em>と呼ばれる第3のモジュールは、HTTPアクセスログ機能を提供するサーブレットコンテナと統合されています。
+    <a href="../access.html">アクセスモジュールのドキュメント</a>をリンク先の別ページでカバーしています。
     </p>
 
-    <p>In the remainder of this document, we will write "logback" to
-    refer to the logback-classic module.
+    <p>以降の文書では、logback-classicモジュールのことを"logback"と記述します。
     </p>
     
-		<h2>Logger, Appenders and Layouts</h2>
+		<h2>ロガー、Appenders、レイアウト</h2>
 		
-		<p>Logback is built upon three main classes: <code>Logger</code>,
+		<p>Logbackは３つのメインクラスで構築されます：<code>Logger</code>、
+		<code>Appender</code> と <code>Layout</code>です。
+		これらは、３つのコンポーネントタイプはメッセージタイプやレベルに従って一緒に動作します。
+		Logback is built upon three main classes: <code>Logger</code>,
 		<code>Appender</code> and <code>Layout</code>. These three types
 		of components work together to enable developers to log messages
 		according to message type and level, and to control at runtime how
 		these messages are formatted and where they are reported.
 		</p>
 
-		<p>The <code>Logger</code> class is part of the logback-classic
+		<p><code>Logger</code>は、logback-classicモジュールに内包されています。
+		<code>Appender</code>や<code>Layout</code>インタフェースは、logback-coreモジュールにあります。
+		general-purposeモジュールであるlogback-coreはloggerの概念は持ってません、
+		The <code>Logger</code> class is part of the logback-classic
 		module. On the other hand, the <code>Appender</code> and
 		<code>Layout</code> interfaces are part of logback-core. As a
 		general-purpose module, logback-core has no notion of
 		loggers.
 		</p>
     
-    <h3 class="doAnchor" name="LoggerContext">Logger context</h3>
+    <h3 class="doAnchor" name="LoggerContext">Logger コンテキスト</h3>
 
 		<p>The first and foremost advantage of any logging API over plain
 		<code>System.out.println</code> resides in its ability to disable
@@ -126,8 +128,7 @@
 		follows:
 		</p>
 		
-    <pre class="prettyprint source">Logger rootLogger = LoggerFactory.getLogger(<a
-    href="http://www.slf4j.org/apidocs/constant-values.html#org.slf4j.Logger.ROOT_LOGGER_NAME">org.slf4j.Logger.ROOT_LOGGER_NAME</a>);</pre>
+    <pre class="brush:java collapse:false">Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);</pre>
 
 		<p>All other loggers are also retrieved with the class static
 		<code>getLogger</code> method found in the <a
@@ -137,7 +138,7 @@
 		interface are listed below.
 		</p>
 
-		<pre class="prettyprint source">package org.slf4j; 
+		<pre class="brush:java" title="例 2.1: インタフェースリスト">package org.slf4j; 
 public interface Logger {
 
   // Printing methods: 
@@ -437,7 +438,7 @@ public interface Logger {
 		
 		<p>Here is an example of the basic selection rule.</p>
 
-		<pre class="prettyprint source">import ch.qos.logback.classic.Level;
+		<pre class="brush:java collapse:true highlight:[12]" title="例 1.1: サンプルソース">import ch.qos.logback.classic.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 ....
@@ -476,7 +477,7 @@ barlogger.<span class="green bold">debug</span>("Exiting gas station search");</
 		</p>
 
 		<p>For example, in</p>
-		<pre class="prettyprint source">Logger x = LoggerFactory.getLogger("wombat"); 
+		<pre class="brush:java collapse:false" title="例 1.1: サンプルソース">Logger x = LoggerFactory.getLogger("wombat"); 
 Logger y = LoggerFactory.getLogger("wombat");</pre>
 
 		<p>
@@ -651,7 +652,7 @@ Logger y = LoggerFactory.getLogger("wombat");</pre>
 		something akin to:
 		</p>
 
-		<div class="prettyprint source"><pre>176  [main] DEBUG manual.architecture.HelloWorld2 - Hello world.</pre></div>
+		<pre class="brush:java">176  [main] DEBUG manual.architecture.HelloWorld2 - Hello world.</pre>
 
 		<p>The first field is the number of milliseconds elapsed since the
 		start of the program. The second field is the thread making the
@@ -674,7 +675,7 @@ Logger y = LoggerFactory.getLogger("wombat");</pre>
 
 		<p>For some Logger <code>logger</code>, writing,</p>
 
-		<pre class="prettyprint source">logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));</pre>
+		<pre class="brush:java collapse:false">logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));</pre>
 
 		<p>incurs the cost of constructing the message parameter, that is
 		converting both integer <code>i</code> and <code>entry[i]</code>
@@ -686,7 +687,7 @@ Logger y = LoggerFactory.getLogger("wombat");</pre>
 		by surrounding the log statement with a test. Here is an example.
 		</p>
 
-		<pre class="prettyprint source">if(logger.isDebugEnabled()) { 
+		<pre class="brush:java">if(logger.isDebugEnabled()) { 
   logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));
 }</pre>
 
@@ -708,7 +709,7 @@ Logger y = LoggerFactory.getLogger("wombat");</pre>
 		</p>
 
 
-		<pre class="prettyprint source">Object entry = new SomeObject(); 
+		<pre class="brush:java collapse:false">Object entry = new SomeObject(); 
 logger.debug("The entry is {}.", entry);</pre>
 
 		<p>Only after evaluating whether to log or not, and only if the decision
@@ -725,7 +726,7 @@ logger.debug("The entry is {}.", entry);</pre>
 		least 30.
 		</p>
 
-		<pre class="prettyprint source">logger.debug("The new entry is "+entry+".");
+		<pre class="brush:java collapse:false">logger.debug("The new entry is "+entry+".");
 logger.debug("The new entry is {}.", entry);</pre>
 
 
@@ -733,7 +734,7 @@ logger.debug("The new entry is {}.", entry);</pre>
 		write:
 		</p>
 
-		<pre class="prettyprint source">logger.debug("The new entry is {}. It replaces {}.", entry, oldEntry);</pre>
+		<pre class="brush:java collapse:false">logger.debug("The new entry is {}. It replaces {}.", entry, oldEntry);</pre>
 
 		<p>If three or more arguments need to be passed, an
 		<code>Object[]</code> variant is also available. For example, you
@@ -741,7 +742,7 @@ logger.debug("The new entry is {}.", entry);</pre>
 		</p>
 
 
-		<pre class="prettyprint source">Object[] paramArray = {newVal, below, above};
+		<pre class="brush:java collapse:false">Object[] paramArray = {newVal, below, above};
 logger.debug("Value {} was inserted between {} and {}.", paramArray);</pre>
 
   
@@ -865,7 +866,7 @@ logger.debug("Value {} was inserted between {} and {}.", paramArray);</pre>
   writing,
   </p>
   
-  <pre class="prettyprint source">x.debug("Entry number: " + i + "is " + entry[i]);</pre>
+  <pre class="brush:java collapse:false">x.debug("Entry number: " + i + "is " + entry[i]);</pre>
 
   <p>incurs the cost of constructing the message parameter,
   i.e. converting both integer <code>i</code> and
@@ -879,7 +880,7 @@ logger.debug("Value {} was inserted between {} and {}.", paramArray);</pre>
   logging:
   </p>
 
-  <pre class="prettyprint source">x.debug("Entry number: {} is {}", i, entry[i]);</pre>
+  <pre class="brush:java collapse:false">x.debug("Entry number: {} is {}", i, entry[i]);</pre>
 
   <p>This variant will not incur the cost of parameter
   construction. Compared to the previous call to the
@@ -929,6 +930,13 @@ logger.debug("Value {} was inserted between {} and {}.", paramArray);</pre>
 
     
   <script src="../templates/footer.js" type="text/javascript"></script>
+  <!-- SyntaxHighlighter -->
+  <script type="text/javascript" src="../js/SyntaxHighlighter/shCore.js"></script>
+  <script type="text/javascript" src="../js/SyntaxHighlighter/shBrushJava.js"></script>
+  <script type="text/javascript" src="../js/SyntaxHighlighter/shBrushXml.js"></script>
+  <script type="text/javascript" src="../js/SyntaxHighlighter/shBrushCss.js"></script>
+  <script type="text/javascript" src="../js/SyntaxHighlighter/shBrushJScript.js"></script>
+  <script>SyntaxHighlighter.all();</script>
 </div>
 </body>
 </html>
