@@ -64,49 +64,44 @@
     <p>以降の文書では、logback-classicモジュールのことを"logback"と記述します。
     </p>
     
-		<h2>ロガー、Appenders、レイアウト</h2>
+		<h2>Logger, Appenders, Layout</h2>
 		
 		<p>Logbackは３つのメインクラスで構築されます：<code>Logger</code>、
 		<code>Appender</code> と <code>Layout</code>です。
-		これらは、３つのコンポーネントタイプはメッセージタイプやレベルに従って一緒に動作します。
-		Logback is built upon three main classes: <code>Logger</code>,
-		<code>Appender</code> and <code>Layout</code>. These three types
-		of components work together to enable developers to log messages
-		according to message type and level, and to control at runtime how
-		these messages are formatted and where they are reported.
+		これらのコンポーネントの3タイプは、ログメッセージの出力場所や、
+		実行時の出力メッセージ書式方法のコントロール、
+		メッセージタイプとレベルに応じてメッセージをログ記録することを
+		開発者が扱えるようにするために一緒に動作します。
 		</p>
 
-		<p><code>Logger</code>は、logback-classicモジュールに内包されています。
-		<code>Appender</code>や<code>Layout</code>インタフェースは、logback-coreモジュールにあります。
-		general-purposeモジュールであるlogback-coreはloggerの概念は持ってません、
-		The <code>Logger</code> class is part of the logback-classic
-		module. On the other hand, the <code>Appender</code> and
-		<code>Layout</code> interfaces are part of logback-core. As a
-		general-purpose module, logback-core has no notion of
-		loggers.
+		<p><code>Logger</code>は、logback-classicモジュールの一部です。
+		一方では<code>Appender</code>や<code>Layout</code>インタフェースは、logback-coreモジュールの一部です。
+		汎用モジュールであるlogback-coreはloggerの概念は持ってません。
 		</p>
     
-    <h3 class="doAnchor" name="LoggerContext">Logger コンテキスト</h3>
+    <h3 class="doAnchor" name="LoggerContext">Logger Context</h3>
 
-		<p>The first and foremost advantage of any logging API over plain
-		<code>System.out.println</code> resides in its ability to disable
-		certain log statements while allowing others to print
-		unhindered. This capability assumes that the logging space, that
-		is, the space of all possible logging statements, is categorized
-		according to some developer-chosen criteria.  In logback-classic,
-		this categorization is an inherent part of loggers.  Every single
-		logger is attached to a <code>LoggerContext</code> which is
-		responsible for manufacturing loggers as well as arranging them in
-		a tree like hierarchy.
+		<p>純粋な<code>System.out.println</code>よりも、今あるロギングAPIのほうが優れている
+		最初で最大の利点は、"他機能の制限を受けずに画面出力をすることを可能にしながら、
+		且つ特定のログ·ステートメントを無効にする機能"が挙げられます。
+
+		それは、ロギングスペースのことです。
+		ロギングスペースは開発者が選んだ基準別に分類されている、利用可能なロギング・ステートメントのスペースです。
+
+		logback-classic内にあるこの分類はロガー固有機能です。
+		全単独ロガーは、<code>LoggerContext</code>に付属しています。
+		<code>LoggerContext</code>は、ただログを出力するだけでなく、階層構造のようなツリーで配置することも担当しています。
 		</p>
 			
-		<p>Loggers are named entities. Their names are case-sensitive and
-		they follow the hierarchical naming rule:
+		<p>Loggerは要素名（エンティティ）がついています。この名前は大・小文字は区別され、
+		次のような階層的な命名規則に従います：
 		</p>
 
 		<div class="definition">
-			<div class="deftitle">Named Hierarchy</div>
-			<p>
+			<div class="deftitle">階層的な命名規則</div>
+			<p>loggerは、ドットで区切られ、その後続の名前が子孫ロガー名の接頭辞である場合、「別のロガーの先祖である」と言います。
+			ロガーは、自身と子孫ロガーの間には祖先がない場合、子ロガーの親であると言われている。
+			
 				A logger is said to be an ancestor of another logger if
 				its name followed by a dot is a prefix of the descendant
 				logger name. A logger is said to be a parent of a child
@@ -115,22 +110,31 @@
 			</p>
 		</div>
 
-		<p>For example, the logger named <code>"com.foo"</code> is a
+		<p>たとえば、 "com.foo"という名前のロガーは"com.foo.Bar"という名前のロガーの親である。
+		同様に、"Java"は"java.util"と "java.util.Vector"の祖先の親です。
+		この命名スキームは、ほとんどの開発者がお聞きになった事があるはずです。
+		
+		For example, the logger named <code>"com.foo"</code> is a
 		parent of the logger named <code>"com.foo.Bar"</code>.  Similarly,
 		<code>"java"</code> is a parent of <code>"java.util"</code> and an
 		ancestor of <code>"java.util.Vector"</code>.  This naming scheme
 		should be familiar to most developers.
 		</p>
 
-		<p>The root logger resides at the top of the logger hierarchy.  It
-		is exceptional in that it is part of every hierarchy at its
-		inception. Like every logger, it can be retrieved by its name, as
-		follows:
+		<p>ルートロガーは、ロガー階層の最上位に存在する。
+		それは例外的に、Loggerインスタンス作成時に全ての階層の一部含まれています。
+		全てのロガーの設定と同様に、次のように名前で関連付けることができます：
 		</p>
 		
     <pre class="brush:java collapse:false">Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);</pre>
 
-		<p>All other loggers are also retrieved with the class static
+		<p>その他の階層のLoggerも<a
+		href="http://www.slf4j.org/api/org/slf4j/Logger.html">org.slf4j.LoggerFactory</a>クラスで見つけることのできる
+		<code>getLogger</code>スタティックメソッドで関連付けられます。
+		
+		このメソッドは、パラメータとして希望するロガーの名前を取ります。
+		ロガーインタフェースの基本的な方法のいくつかを以下に示します。
+		All other loggers are also retrieved with the class static
 		<code>getLogger</code> method found in the <a
 		href="http://www.slf4j.org/api/org/slf4j/Logger.html">org.slf4j.LoggerFactory</a>
 		class. This method takes the name of the desired logger as a
@@ -151,10 +155,14 @@ public interface Logger {
 
 
 
-    <h3 class="doAnchor" name="effectiveLevel">Effective Level aka
+    <h3 class="doAnchor" name="effectiveLevel">有効レベル別名レベルの継承
+    Effective Level aka
     Level Inheritance </h3>
 
-		<p>Loggers may be assigned levels. The set of possible levels
+		<p>ロガーのレベルを割り当てることができる。可能なレベルのセット（TRACE、DEBUGは、情報、WARNとERROR）はch.qos.logback.classic.Levelクラスで定義されます。
+		logbackでは、レベルのクラスは最終的なものであることに注意してくださいとはるかに柔軟なアプローチは、マーカーオブジェクトの形で存在しているように、サブクラス化することはできません。
+		
+		Loggers may be assigned levels. The set of possible levels
 		(TRACE, DEBUG, INFO, WARN and ERROR) are defined in the
 		<code>ch.qos.logback.classic.Level</code> class. Note that in
 		logback, the <code>Level</code> class is final and cannot be
@@ -162,21 +170,27 @@ public interface Logger {
 		of <code>Marker</code> objects.
 		</p>
 
-		<p>If a given logger is not assigned a level, then it inherits one
+		<p>特定のロガーレベルが割り当てられていない場合、それは割り当てられたレベルに最も近い祖先からの1つを継承。より正式に：
+		
+		If a given logger is not assigned a level, then it inherits one
 		from its closest ancestor with an assigned level. More formally:
 		</p>
 
 		<div class="definition">
 		
       
-			<p>The effective level for a given logger <em>L</em>, is equal
+			<p>与えられたロガーLの効果的なレベルは、L自体から始まり、ルートロガーに向けた階層に上向きに進み、その階層内の最初の非ヌル·レベルに等しい。
+			
+			The effective level for a given logger <em>L</em>, is equal
 			to the first non-null level in its hierarchy, starting at
 			<em>L</em> itself and proceeding upwards in the hierarchy
 			towards the root logger.
 			</p>
 		</div>
 	
-		<p>To ensure that all loggers can eventually inherit a level, the
+		<p>すべてのロガーは、最終的にレベルを継承できるようにするには、ルートロガーは、常に割り当てられたレベルを持っています。デフォルトでは、このレベルがDEBUGです。
+		
+		To ensure that all loggers can eventually inherit a level, the
 		root logger always has an assigned level. By default, this level
 		is DEBUG.
 		</p>
