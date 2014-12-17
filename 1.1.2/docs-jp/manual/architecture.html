@@ -76,7 +76,7 @@
 
 		<p><code>Logger</code>は、logback-classicモジュールの一部です。
 		一方では<code>Appender</code>や<code>Layout</code>インタフェースは、logback-coreモジュールの一部です。
-		汎用モジュールであるlogback-coreはloggerの概念は持ってません。
+		汎用モジュールですlogback-coreはloggerの概念は持ってません。
 		</p>
     
     <h3 class="doAnchor" name="LoggerContext">Logger Context</h3>
@@ -94,58 +94,39 @@
 		</p>
 			
 		<p>Loggerは要素名（エンティティ）がついています。この名前は大・小文字は区別され、
-		次のような階層的な命名規則に従います：
+		次のような階層の命名規則に従います：
 		</p>
 
 		<div class="definition">
-			<div class="deftitle">階層的な命名規則</div>
-			<p>loggerは、ドットで区切られ、その後続の名前が子孫ロガー名の接頭辞である場合、「別のロガーの先祖である」と言います。
-			ロガーは、自身と子孫ロガーの間には祖先がない場合、子ロガーの親であると言われている。
-			
-				A logger is said to be an ancestor of another logger if
-				its name followed by a dot is a prefix of the descendant
-				logger name. A logger is said to be a parent of a child
-				logger if there are no ancestors between itself and the
-				descendant logger.
+			<div class="deftitle">階層の命名規則</div>
+			<p>Loggerは、ドットで区切られ、後に続く名前が子孫ロガー名の接頭辞の場合、「別のロガーの祖先」と言います。
+			自身と子孫ロガーの間に祖先がない場合は、「子ロガーの親」と言います。
 			</p>
 		</div>
 
-		<p>たとえば、 "com.foo"という名前のロガーは"com.foo.Bar"という名前のロガーの親である。
-		同様に、"Java"は"java.util"と "java.util.Vector"の祖先の親です。
+		<p>たとえば、 "com.foo"という名前のLoggerは"com.foo.Bar"のLoggerの親です。
+		同様に、"Java"は"java.util"と "java.util.Vector"の祖先です。
 		この命名スキームは、ほとんどの開発者がお聞きになった事があるはずです。
-		
-		For example, the logger named <code>"com.foo"</code> is a
-		parent of the logger named <code>"com.foo.Bar"</code>.  Similarly,
-		<code>"java"</code> is a parent of <code>"java.util"</code> and an
-		ancestor of <code>"java.util.Vector"</code>.  This naming scheme
-		should be familiar to most developers.
 		</p>
 
-		<p>ルートロガーは、ロガー階層の最上位に存在する。
-		それは例外的に、Loggerインスタンス作成時に全ての階層の一部含まれています。
-		全てのロガーの設定と同様に、次のように名前で関連付けることができます：
+		<p>ROOTロガーは、Logger階層の最上位に位置します。
+		それは例外的に、Loggerインスタンス作成時に全ての階層の最上位として含まれています。
+		他のLoggerの設定と同様に、次のように直接名前で関連付けることもできます：
 		</p>
 		
     <pre class="brush:java collapse:false">Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);</pre>
 
 		<p>その他の階層のLoggerも<a
-		href="http://www.slf4j.org/api/org/slf4j/Logger.html">org.slf4j.LoggerFactory</a>クラスで見つけることのできる
-		<code>getLogger</code>スタティックメソッドで関連付けられます。
-		
-		このメソッドは、パラメータとして希望するロガーの名前を取ります。
-		ロガーインタフェースの基本的な方法のいくつかを以下に示します。
-		All other loggers are also retrieved with the class static
-		<code>getLogger</code> method found in the <a
-		href="http://www.slf4j.org/api/org/slf4j/Logger.html">org.slf4j.LoggerFactory</a>
-		class. This method takes the name of the desired logger as a
-		parameter. Some of the basic methods in the <code>Logger</code>
-		interface are listed below.
+		href="http://www.slf4j.org/api/org/slf4j/Logger.html">org.slf4j.LoggerFactory</a>クラスにある
+		<code>getLogger</code>スタティックメソッドで関連付けることができます。
+		このメソッドは、引数に希望のLogger名を設定します。
+		<code>Logger</code>インタフェースの基本メソッドのいくつかを紹介します：
 		</p>
 
 		<pre class="brush:java" title="例 2.1: インタフェースリスト">package org.slf4j; 
 public interface Logger {
 
-  // Printing methods: 
+  // ログ出力メソッド: 
   public void trace(String message);
   public void debug(String message);
   public void info(String message); 
@@ -155,22 +136,20 @@ public interface Logger {
 
 
 
-    <h3 class="doAnchor" name="effectiveLevel">有効レベル別名レベルの継承
+    <h3 class="doAnchor" name="effectiveLevel">
     Effective Level aka
-    Level Inheritance </h3>
+    Level Inheritance （有効レベル,別名レベルの継承）</h3>
 
-		<p>ロガーのレベルを割り当てることができる。可能なレベルのセット（TRACE、DEBUGは、情報、WARNとERROR）はch.qos.logback.classic.Levelクラスで定義されます。
-		logbackでは、レベルのクラスは最終的なものであることに注意してくださいとはるかに柔軟なアプローチは、マーカーオブジェクトの形で存在しているように、サブクラス化することはできません。
-		
-		Loggers may be assigned levels. The set of possible levels
-		(TRACE, DEBUG, INFO, WARN and ERROR) are defined in the
-		<code>ch.qos.logback.classic.Level</code> class. Note that in
-		logback, the <code>Level</code> class is final and cannot be
-		sub-classed, as a much more flexible approach exists in the form
-		of <code>Marker</code> objects.
+		<p>Loggerはレベルを割り当てることができます。
+		割当て可能なレベルの単位（TRACE、DEBUG、INFO、WARN、ERROR）は<code
+		>ch.qos.logback.classic.Level</code>で定義されます。
+		logbackでは、<code>Level</code>クラスはfinalであり、より柔軟なアプローチが可能な<code
+		>Marker</code>ようにサブクラス化は出来ないことに注意してください。
 		</p>
 
-		<p>特定のロガーレベルが割り当てられていない場合、それは割り当てられたレベルに最も近い祖先からの1つを継承。より正式に：
+		<p>特定のloggerにレベルが割り当てられていない場合、
+		レベルが割り当てられている最も近い祖先を継承します。
+		詳しい仕様は以下：
 		
 		If a given logger is not assigned a level, then it inherits one
 		from its closest ancestor with an assigned level. More formally:
@@ -179,33 +158,30 @@ public interface Logger {
 		<div class="definition">
 		
       
-			<p>与えられたロガーLの効果的なレベルは、L自体から始まり、ルートロガーに向けた階層に上向きに進み、その階層内の最初の非ヌル·レベルに等しい。
-			
-			The effective level for a given logger <em>L</em>, is equal
-			to the first non-null level in its hierarchy, starting at
-			<em>L</em> itself and proceeding upwards in the hierarchy
-			towards the root logger.
+			<p>Logger<em>L</em>のEffectiveレベルは対象階層の初回non-nullレベルと等価です。
+			<em>L</em>自身から始め、ROOTのLoggerへ向かい上向きにレベルを探します。
 			</p>
 		</div>
 	
-		<p>すべてのロガーは、最終的にレベルを継承できるようにするには、ルートロガーは、常に割り当てられたレベルを持っています。デフォルトでは、このレベルがDEBUGです。
-		
+		<p>すべてのloggerがレベルを継承できるように、ROOT loggerは常にレベルが割当てられています。
+		デフォルトはDEBUGレベルです。
 		To ensure that all loggers can eventually inherit a level, the
 		root logger always has an assigned level. By default, this level
 		is DEBUG.
 		</p>
 
-		<p>Below are four examples with various assigned level values and
+		<p>以下はレベル継承ルールに従って返却された"effective (inherited) level"と割当てられたレベル値のバリエーションの４つの例です。
+		Below are four examples with various assigned level values and
 		the resulting effective (inherited) levels according to the level
 		inheritance rule.
 		</p>
 
-		<em>Example 1</em>
+		<em>例 1</em>
 		<table class="bodyTable">
 			<tr>
-				<th>Logger name</th>
-				<th>Assigned level</th>
-				<th>Effective level</th>
+				<th>Logger名称</th>
+				<th>割当てレベル</th>
+				<th>実際のレベル</th>
 			</tr>
 			<tr class="alt">
 				<td>root</td>
@@ -230,7 +206,11 @@ public interface Logger {
 		  </tr>
   </table>
 
-		<p> In example 1 above, only the root logger is assigned a level.
+		<p>例１上では、ROOT loggerが割当てられているだけです。
+		レベルは<code>DEBUG</code>であり、その他のloggerである
+		<code>X</code>、<code>X.Y</code>、<code>X.Y.Z</code>
+		が継承しています。
+		In example 1 above, only the root logger is assigned a level.
 		This level value, <code>DEBUG</code>, is inherited by the other
 		loggers <code>X</code>, <code>X.Y</code> and <code>X.Y.Z</code>
 		</p>
@@ -238,9 +218,9 @@ public interface Logger {
 		<em>Example 2</em>
 		<table class="bodyTable">
 			<tr>
-				<th>Logger name</th>
-				<th>Assigned level</th>
-				<th>Effective level</th>
+				<th>Logger名称</th>
+				<th>割当てレベル</th>
+				<th>実際のレベル</th>
 			</tr>
 			<tr class="alt" align="left">
 				<td>root</td>
@@ -272,9 +252,9 @@ public interface Logger {
 		<em>Example 3</em>
 		<table class="bodyTable">
 			<tr>
-				<th>Logger name</th>
-				<th>Assigned level</th>
-				<th>Effective level</th>
+				<th>Logger名称</th>
+				<th>割当てレベル</th>
+				<th>実際のレベル</th>
 			</tr>
 			<tr class="alt" align="left">
 				<td>root</td>
@@ -310,9 +290,9 @@ public interface Logger {
 		<table class="bodyTable">
 
 			<tr>
-				<th>Logger name</th>
-				<th>Assigned level</th>
-				<th>Effective level</th>
+				<th>Logger名称</th>
+				<th>割当てレベル</th>
+				<th>実際のレベル</th>
 			</tr>
 			<tr class="alt" align="left">
 				<td>root</td>
